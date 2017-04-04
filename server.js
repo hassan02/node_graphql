@@ -5,7 +5,10 @@ const {
 } = require('graphql-server-express');
 const graphqlHTTP = require('express-graphql');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/node_graph_ql');
+require('dotenv').config()
+const env = process.env.NODE_ENV || "development";
+const database = env == "development" ? process.env.DEV_DB : process.env.PROD_DB;
+mongoose.connect(database);
 var db = mongoose.connection;
 const autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(db);
@@ -102,11 +105,6 @@ app.use('/graphql', function(req, res) {
 });
 
 const port = process.env.PORT || 8000
-
-
-
-mongoose.Promise = require('bluebird');
-
 
 db.on('error', console.error.bind(console, 'connection error...'));
 db.once('open', function callback() {
