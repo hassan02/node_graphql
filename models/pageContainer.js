@@ -12,15 +12,17 @@ var pageContainerSchema = Schema({
         ref: 'Entry'
     }],
     hero: {
-        type: Schema.Types.ObjectId,
-        ref: 'Hero'
-            // required: true
+        type: Object,
     },
     slug: {
         type: String,
         trim: true
     },
     title: {
+        type: String,
+        trim: true
+    },
+    content_id: {
         type: String,
         trim: true
     }

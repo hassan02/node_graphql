@@ -3,6 +3,10 @@ var mongoose = require('mongoose'),
     autoIncrement = require('mongoose-auto-increment');
 
 var eventPartnerSchema = Schema({
+    companyLogo: {
+        type: String,
+        trim: true
+    },
     companyName: {
         type: String,
         trim: true,
@@ -11,9 +15,10 @@ var eventPartnerSchema = Schema({
         type: String,
         trim: true
     },
-    companyLogo: {
-        type: String,
-        trim: true
+    event: {
+        type: Schema.Types.ObjectId,
+        ref: 'Entry',
+        required: false
     }
 }, {
     timestamps: {

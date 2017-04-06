@@ -18,51 +18,51 @@ var entrySchema = Schema({
     },
     endTime: {
         type: Date,
-        // required: tradue
+        trim: true
     },
     eventPartners: [{
         type: Schema.Types.ObjectId,
         ref: 'EventPartner'
     }],
-    page: {
-        type: Schema.Types.ObjectId,
-        ref: 'pageContainer',
-        required: false,
-        childPath: "entries"
-    },
     externalUrl: {
         type: String,
-        trim: true,
+        trim: true
     },
-    hero: {},
-    location: {},
+    hero: Object,
+    location: Object,
     slug: {
         type: String,
         trim: true
     },
-    speakers: {},
+    speakers: {
+        type: Array,
+        default: []
+    },
     startTime: {
         type: Date,
-        // required: true
     },
-    tags: [],
+    tags: {
+        type: Array,
+        default: []
+    },
     title: {
-        type: Date,
-        // required: true
+        type: String,
     },
     type: {
-        type: Date,
-        // required: true
+        type: String,
     },
+    page: {
+        type: Schema.Types.ObjectId,
+        ref: 'PageContainer',
+        required: false,
+    }
 }, {
     timestamps: {
         createdAt: 'date_created',
         updatedAt: 'date_modified'
     }
 })
-entrySchema.plugin(relationship, {
-    relationshipPathName: 'page'
-});
+
 mongoose.model('Entry', entrySchema)
 
 entrySchema.plugin(autoIncrement.plugin, {

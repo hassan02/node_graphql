@@ -8,12 +8,8 @@ const {
 const graphqlHTTP = require('express-graphql');
 const RootQuery = require('./queries');
 
-const db = require('./config/mongoose');
-
-
-const Car = mongoose.model('Car');
-const Entry = mongoose.model('Entry');
-const Page = mongoose.model('PageContainer');
+const { db } = require('./config/mongoose');
+const fetchAllPageContainer = require('./queries/resolvers').fetchAllPageContainer
 
 const {
     GraphQLObjectType,
@@ -23,13 +19,20 @@ const {
 } = require('graphql')
 
 
-
-
+const Entry = mongoose.model('Entry');
+const Page = mongoose.model('PageContainer');
+const EventPartner = mongoose.model('EventPartner')
 
 const rootSchema = new GraphQLSchema({
     query: RootQuery,
 });
+
+
 const app = express();
+app.get('/pages', function(req, res) {
+    fetchAllPageContainer().then((collection) => { return res.status(200).json(collection) }).catch(err => { return str(err) })
+})
+
 
 app.use('/graphql', function(req, res) {
     return graphqlHTTP({
@@ -95,20 +98,74 @@ app.use('/graphql', function(req, res) {
 //     }
 // })
 // }
+function createPageContainer() {
+    const pageDetails = require('./data')
+    new_page = new Page({
+        "description": pageDetails.description,
+        "slug": pageDetails.slug,
+        "title": pageDetails.title,
+        "content_id": pageDetails.content_id,
+        "hero": pageDetails.hero
+    })
+    new_page.save(function(err, page) {
+        if (err) {
+            throw err
+        } else {
+            entries = pageDetails.entries
+            for (var i = 0; i < entries.length; i++) {
+                entry = entries[i]
+                new_entry = new Entry({
+                    "address": entry.address,
+                    "descriptionLong": entry.descriptionLong,
+                    "descriptionShort": entry.descriptionShort,
+                    "endTime": entry.endTime,
+                    "externalUrl": entry.externalUrl,
+                    "hero": entry.hero,
+                    "location": entry.location,
+                    "slug": entry.slug,
+                    "speakers": entry.speakers,
+                    "startTime": entry.startTime,
+                    "tags": entry.tags,
+                    "title": entry.title,
+                    "type": entry.type,
+                    "page": page._id
+                })
+                eventPartners = entry.eventPartners
+                new_entry.save(function(err, entry_new) {
+                    if (err) { throw err } else {
+                        page.entries.push(entry_new)
+                        page.save(function(err, res) {
+                            if (err) throw err
+                        })
+                        for (var i = 0; i < eventPartners.length; i++) {
+                            eventPartner = eventPartners[i]
+                            new_event_partner = new EventPartner({
+                                "companyLogo": eventPartner.companyLogo,
+                                "companyName": eventPartner.companyName,
+                                "url": eventPartner.url,
+                                "event": entry_new._id
+                            })
+                            new_event_partner.save(function(err, entry_partner_new) {
+                                if (err) {
+                                    throw err
+                                } else {
+                                    entry_new.eventPartners.push(entry_partner_new)
+                                    entry_new.save(function(err, res) {
+                                        if (err) throw err
+                                    })
+                                }
+                            })
+                        }
+                    }
 
-function fetchAllPageContainer() {
-    return new Promise((resolve, reject) => {
-        Page.find({})
-            .then((pages) => {
-                console.log(pages)
-                resolve(pages);
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
+                })
+            }
+            console.log("Successful")
+        }
+    })
+
 }
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 5000
 
 db.on('error', console.error.bind(console, 'connection error...'));
 db.once('open', function callback() {
@@ -116,8 +173,8 @@ db.once('open', function callback() {
     app.listen(port, function() {
         // createNewCar()
         // createPageContainer()
-        value = fetchAllPageContainer();
-        console.log(value);
+        // value = fetchAllPageContainer();
+        // console.log(value);
         console.log(`App is listening on port ${port}`)
     })
 });

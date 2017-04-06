@@ -5,8 +5,15 @@ mongoose.connect(database);
 var db = mongoose.connection;
 const autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(db);
-require('../models/cars');
-require('../models/entry');
-require('../models/pageContainer');
 
-module.exports = db
+function registerModels() {
+    require('../models/cars');
+    require('../models/entry');
+    require('../models/pageContainer');
+    require('../models/eventPartner');
+}
+
+module.exports = {
+    db,
+    registerModels
+}
