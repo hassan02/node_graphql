@@ -1,21 +1,19 @@
+require('dotenv').config()
+const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {
     graphqlExpress
 } = require('graphql-server-express');
 const graphqlHTTP = require('express-graphql');
-var mongoose = require('mongoose');
-require('dotenv').config()
-const env = process.env.NODE_ENV || "development";
-const database = env == "development" ? process.env.DEV_DB : process.env.PROD_DB;
-mongoose.connect(database);
-var db = mongoose.connection;
-const autoIncrement = require('mongoose-auto-increment');
-autoIncrement.initialize(db);
+const RootQuery = require('./queries');
 
-require('./models/cars');
+const db = require('./config/mongoose');
+
 
 const Car = mongoose.model('Car');
+const Entry = mongoose.model('Entry');
+const Page = mongoose.model('PageContainer');
 
 const {
     GraphQLObjectType,
@@ -25,91 +23,101 @@ const {
 } = require('graphql')
 
 
-const CarType = new GraphQLObjectType({
-    name: 'Car',
-
-    fields: () => {
-        return {
-            id: {
-                type: GraphQLID
-            },
-            name: {
-                type: GraphQLString
-            },
-            model: {
-                type: GraphQLString
-            },
-            type: {
-                type: GraphQLString
-            },
-        }
-    }
-})
 
 
-const RootQuery = new GraphQLObjectType({
-    name: 'RootQuery',
-
-    fields: () => ({
-        Car: {
-            type: CarType,
-            description: 'The car identified by an name',
-            args: {
-                id: {
-                    type: GraphQLID
-                },
-                name: {
-                    type: GraphQLString
-                },
-                type: {
-                    type: GraphQLString
-                }
-
-
-            },
-            resolve: (obj, args) => {
-                Car.findOne(args, function(err, car) {
-                    if (err) return "error"
-                    return car
-                })
-
-                return new Promise((resolve, reject) => {
-                    Car.findOne(args)
-                        .then((car) => {
-                            resolve(car);
-                        })
-                        .catch((err) => {
-                            reject(err);
-                        });
-                });
-            }
-        }
-    })
-});
 
 const rootSchema = new GraphQLSchema({
     query: RootQuery,
 });
-const PORT = 3000;
-
 const app = express();
 
 app.use('/graphql', function(req, res) {
     return graphqlHTTP({
         schema: rootSchema,
         graphiql: true,
-        context: {
-
-        }
+        context: {}
     })(req, res)
 });
 
+// function createNewCar() {
+//     car = new Car({
+//         'name': 'TY',
+//     })
+//     car.save(function(err, res) {
+//         if (err) {
+//             console.log("Errrot")
+//         }
+//         if (res) {
+//             console.log(res)
+//         }
+//     })
+// }
+// function createNewEntry() {
+//     entry = new Entry({
+//         'address': 'Amity',
+//         'slug': 'AM'
+//     })
+//     entry.save(function(err, res) {
+//         if (err) {
+//             console.log(err)
+//         }
+//         if (res) {
+//             console.log(res)
+//         }
+//     })
+// }
+
+// function createPageContainer() {
+// page = new Page({
+//     'description': 'New Page 3',
+//     'slug': 'np4'
+// })
+// page.save(function(err, res) {
+//     if (res) {
+//         var entry = Entry({
+//             'address': 'HM3',
+//             'page': page._id
+//         })
+//         entry.save(function(err, res) {
+//             if (res) {
+//                 console.log(res)
+//                 page.entries.push(res);
+//                 page.entries.push(res);
+//                 page.save(function(err, res) {
+//                     console.log(res);
+//                 });
+//             } else {
+//                 console.log(err);
+//             }
+//         })
+//     } else {
+//         console.log(err);
+//     }
+// })
+// }
+
+function fetchAllPageContainer() {
+    return new Promise((resolve, reject) => {
+        Page.find({})
+            .then((pages) => {
+                console.log(pages)
+                resolve(pages);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
 const port = process.env.PORT || 8000
 
 db.on('error', console.error.bind(console, 'connection error...'));
 db.once('open', function callback() {
     console.log('db opened');
     app.listen(port, function() {
+        // createNewCar()
+        // createPageContainer()
+        value = fetchAllPageContainer();
+        console.log(value);
         console.log(`App is listening on port ${port}`)
     })
 });
