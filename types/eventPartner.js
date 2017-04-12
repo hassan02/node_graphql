@@ -21,6 +21,9 @@ const EventPartnerType = new GraphQLObjectType({
             url: {
                 type: GraphQLString
             },
+            partner_id: {
+                type: GraphQLString
+            },
             event: {
                 type: GraphQLString
             }

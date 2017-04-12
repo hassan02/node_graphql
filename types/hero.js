@@ -12,13 +12,19 @@ const HeroType = new GraphQLObjectType({
 
     fields: () => {
         return {
-            companyName: {
+            backgroundImage: {
                 type: GraphQLString
             },
-            url: {
+            blurb: {
                 type: GraphQLString
             },
-            companyLogo: {
+            headline: {
+                type: GraphQLString
+            },
+            textAlignment: {
+                type: GraphQLString
+            },
+            hero_id: {
                 type: GraphQLString
             }
         }

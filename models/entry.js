@@ -28,7 +28,10 @@ var entrySchema = Schema({
         type: String,
         trim: true
     },
-    hero: Object,
+    heroes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'EntryHero'
+    }],
     location: Object,
     slug: {
         type: String,
@@ -50,6 +53,11 @@ var entrySchema = Schema({
     },
     type: {
         type: String,
+    },
+    entry_id: {
+        type: String,
+        trim: true,
+        required: true
     },
     page: {
         type: Schema.Types.ObjectId,

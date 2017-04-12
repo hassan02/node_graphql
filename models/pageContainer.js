@@ -12,7 +12,8 @@ var pageContainerSchema = Schema({
         ref: 'Entry'
     }],
     hero: {
-        type: Object,
+        type: Schema.Types.ObjectId,
+        ref: 'EventPartner'
     },
     slug: {
         type: String,
@@ -22,7 +23,7 @@ var pageContainerSchema = Schema({
         type: String,
         trim: true
     },
-    content_id: {
+    page_id: {
         type: String,
         trim: true
     }

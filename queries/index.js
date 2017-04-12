@@ -6,43 +6,40 @@ const {
 } = require('graphql');
 const CarType = require('../types/car')
 const fetchAllPageContainer = require('./resolvers').fetchAllPageContainer;
-const PageContainerType = require('../types/pageContainers')
+const fetchAllEvent = require('./resolvers').fetchAllEvent;
+const fetchAllHero = require('./resolvers').fetchAllHero;
+const fetchAllEventPartner = require('./resolvers').fetchAllEventPartner;
+
+
+const PageContainerType = require('../types/pageContainers');
+const EventType = require('../types/event');
+const HeroType = require('../types/hero');
+
+const EventPartnerType = require('../types/eventPartner');
+
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
 
     fields: () => ({
-        Car: {
-            type: CarType,
-            description: 'The car identified by an name',
+        Event: {
+            type: EventType,
+            description: 'The event id or slug',
             args: {
-                id: {
-                    type: GraphQLID
-                },
-                name: {
+                _id: {
                     type: GraphQLString
                 },
-                type: {
+                entry_id: {
                     type: GraphQLString
-                }
+                },
+                title: {
+                    type: GraphQLString
+                },
+
             },
             resolve: (obj, args) => {
-                // Car.findOne(args, function(err, car) {
-                //     if (err) return "error"
-                //     return car
-                // })
-
-                // return new Promise((resolve, reject) => {
-                //     Car.findOne(args)
-                //         .then((car) => {
-                //             resolve(car);
-                //         })
-                //         .catch((err) => {
-                //             reject(err);
-                //         });
-                // });
+                return fetchAllEvent(args).then((collection) => { return collection }).catch(err => { return str(err) })
             }
         },
-
         PageContainer: {
             type: PageContainerType,
             description: 'The page container identified by an id or slug',
@@ -50,18 +47,48 @@ const RootQuery = new GraphQLObjectType({
                 _id: {
                     type: GraphQLString
                 },
+                page_id: {
+                    type: GraphQLString
+                },
                 slug: {
                     type: GraphQLString
                 },
                 title: {
                     type: GraphQLString
+                }
+            },
+            resolve: (obj, args) => {
+                return fetchAllPageContainer(args).then((collection) => { return collection }).catch(err => { return str(err) })
+            }
+        },
+        Hero: {
+            type: HeroType,
+            description: 'The hero identified by an id or blurb',
+            args: {
+                _id: {
+                    type: GraphQLString
                 },
-                content_id: {
+                hero_id: {
                     type: GraphQLString
                 }
             },
             resolve: (obj, args) => {
-                return fetchAllPageContainer(args).then((collection) => { console.log(collection); return collection }).catch(err => { return str(err) })
+                return fetchAllHero(args).then((collection) => { console.log(collection); return collection }).catch(err => { return str(err) })
+            }
+        },
+        EventPartner: {
+            type: EventPartnerType,
+            description: 'The event partner idnetified by an id',
+            args: {
+                _id: {
+                    type: GraphQLString
+                },
+                partner_id: {
+                    type: GraphQLString
+                }
+            },
+            resolve: (obj, args) => {
+                return fetchAllEventPartner(args).then((collection) => { return collection }).catch(err => { return str(err) })
             }
         }
     })

@@ -9,6 +9,7 @@ const {
 
 const EventType = require('./event')
 const HeroType = require('./hero')
+const EventParnerType = require('./eventPartner')
 
 const PageContainerType = new GraphQLObjectType({
     name: 'PageContainer',
@@ -25,7 +26,7 @@ const PageContainerType = new GraphQLObjectType({
                 type: new GraphQLList(EventType)
             },
             hero: {
-                type: HeroType
+                type: EventParnerType
             },
             slug: {
                 type: GraphQLString

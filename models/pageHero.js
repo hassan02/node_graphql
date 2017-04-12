@@ -2,11 +2,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     autoIncrement = require('mongoose-auto-increment');
 
-var eventPartnerSchema = Schema({
-    companyLogo: {
-        type: String,
-        trim: true
-    },
+var pageHeroSchema = Schema({
     companyName: {
         type: String,
         trim: true,
@@ -15,14 +11,13 @@ var eventPartnerSchema = Schema({
         type: String,
         trim: true
     },
-    partner_id: {
+    companyLogo: {
         type: String,
         trim: true
     },
-    event: {
-        type: Schema.Types.ObjectId,
-        ref: 'Entry',
-        required: false
+    hero_id: {
+        type: String,
+        required: true
     }
 }, {
     timestamps: {
@@ -31,10 +26,10 @@ var eventPartnerSchema = Schema({
     }
 })
 
-mongoose.model('EventPartner', eventPartnerSchema)
+mongoose.model('PageHero', pageHeroSchema)
 
-eventPartnerSchema.plugin(autoIncrement.plugin, {
-    model: 'EventPartner',
+pageHeroSchema.plugin(autoIncrement.plugin, {
+    model: 'PageHero',
     field: 'id',
     startAt: 1
 });

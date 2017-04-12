@@ -2,18 +2,27 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     autoIncrement = require('mongoose-auto-increment');
 
-var heroSchema = Schema({
-    companyName: {
+var entryHeroSchema = Schema({
+    backgroundImage: {
         type: String,
         trim: true,
     },
-    url: {
+    blurb: {
         type: String,
         trim: true
     },
-    companyLogo: {
+    headline: {
         type: String,
         trim: true
+    },
+    textAlignment: {
+        type: String,
+        trim: true
+    },
+    hero_id: {
+        type: String,
+        trim: true,
+        required: true
     }
 }, {
     timestamps: {
@@ -22,10 +31,10 @@ var heroSchema = Schema({
     }
 })
 
-mongoose.model('Hero', heroSchema)
+mongoose.model('EntryHero', entryHeroSchema)
 
-heroSchema.plugin(autoIncrement.plugin, {
-    model: 'Hero',
+entryHeroSchema.plugin(autoIncrement.plugin, {
+    model: 'EntryHero',
     field: 'id',
     startAt: 1
 });

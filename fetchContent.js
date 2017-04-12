@@ -52,3 +52,60 @@
 // }
 //
 // module.exports = createNewCar
+
+// function createNewCar() {
+//     car = new Car({
+//         'name': 'TY',
+//     })
+//     car.save(function(err, res) {
+//         if (err) {
+//             console.log("Errrot")
+//         }
+//         if (res) {
+//             console.log(res)
+//         }
+//     })
+// }
+// function createNewEntry() {
+//     entry = new Entry({
+//         'address': 'Amity',
+//         'slug': 'AM'
+//     })
+//     entry.save(function(err, res) {
+//         if (err) {
+//             console.log(err)
+//         }
+//         if (res) {
+//             console.log(res)
+//         }
+//     })
+// }
+
+// function createPageContainer() {
+// page = new Page({
+//     'description': 'New Page 3',
+//     'slug': 'np4'
+// })
+// page.save(function(err, res) {
+//     if (res) {
+//         var entry = Entry({
+//             'address': 'HM3',
+//             'page': page._id
+//         })
+//         entry.save(function(err, res) {
+//             if (res) {
+//                 console.log(res)
+//                 page.entries.push(res);
+//                 page.entries.push(res);
+//                 page.save(function(err, res) {
+//                     console.log(res);
+//                 });
+//             } else {
+//                 console.log(err);
+//             }
+//         })
+//     } else {
+//         console.log(err);
+//     }
+// })
+// }

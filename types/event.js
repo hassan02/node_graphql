@@ -7,6 +7,8 @@ const {
     GraphQLFloat
 } = require('graphql');
 const EventPartnerType = require('./eventPartner')
+const HeroType = require('./hero')
+
 const locationType = require('./location')
 
 
@@ -36,11 +38,14 @@ const EventType = new GraphQLObjectType({
             externalUrl: {
                 type: GraphQLString
             },
-            hero: {
-                type: GraphQLString
+            heroes: {
+                type: new GraphQLList(HeroType)
             },
             location: {
                 type: locationType
+            },
+            title: {
+                type: GraphQLString
             }
         }
     }

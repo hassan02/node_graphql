@@ -12,7 +12,7 @@ const locationType = new GraphQLObjectType({
 
     fields: () => {
         return {
-            log: {
+            lon: {
                 type: GraphQLFloat
             },
             lat: {
